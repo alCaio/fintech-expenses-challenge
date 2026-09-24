@@ -2,8 +2,8 @@
 
 Plataforma interna para colaboradores registrarem e acompanharem movimentações financeiras por categoria (despesas operacionais, receitas de clientes, reembolsos etc.).
 
-- **Deploy:** https://SEU-PROJETO.vercel.app
-- **Documentação da API (Swagger):** https://SEU-PROJETO.vercel.app/api/docs
+- **Deploy:** https://fintech-expenses-challenge-iota.vercel.app
+- **Documentação da API (Swagger):** https://fintech-expenses-challenge-iota.vercel.app/api/docs
 - **Repositório:** https://github.com/alCaio/fintech-expenses-challenge
 
 ### Usuário de teste

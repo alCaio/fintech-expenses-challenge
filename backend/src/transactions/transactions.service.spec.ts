@@ -92,7 +92,7 @@ describe('TransactionsService', () => {
 
   it('does not create a transaction in a category owned by another user', async () => {
     categoriesService.findOwned.mockRejectedValue(
-      new NotFoundException('Category not found'),
+      new NotFoundException('Categoria não encontrada'),
     );
 
     await expect(

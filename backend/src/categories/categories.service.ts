@@ -63,7 +63,7 @@ export class CategoriesService {
     });
     if (transactionsCount > 0) {
       throw new ConflictException(
-        `Category has ${transactionsCount} transaction(s) and cannot be deleted`,
+        `A categoria possui ${transactionsCount} transação(ões) e não pode ser excluída`,
       );
     }
 
@@ -75,7 +75,7 @@ export class CategoriesService {
       where: { id, userId },
     });
     if (!category) {
-      throw new NotFoundException('Category not found');
+      throw new NotFoundException('Categoria não encontrada');
     }
     return category;
   }
@@ -89,7 +89,7 @@ export class CategoriesService {
       select: { id: true },
     });
     if (existing) {
-      throw new ConflictException(`Category "${name}" already exists`);
+      throw new ConflictException(`A categoria "${name}" já existe`);
     }
   }
 }

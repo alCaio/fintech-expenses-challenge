@@ -13,7 +13,7 @@ export function toDateRangeFilter({
 }: DateRangeQueryDto): DateRangeFilter | undefined {
   if (startDate && endDate && startDate > endDate) {
     throw new BadRequestException(
-      'startDate must be before or equal to endDate',
+      'A data inicial deve ser anterior ou igual à data final',
     );
   }
   if (!startDate && !endDate) {

@@ -70,24 +70,24 @@ export class AllExceptionsFilter implements ExceptionFilter {
         case 'P2002':
           return {
             status: HttpStatus.CONFLICT,
-            message: 'Resource already exists',
+            message: 'Registro já existe',
           };
         case 'P2003':
           return {
             status: HttpStatus.CONFLICT,
-            message: 'Resource is referenced by other records',
+            message: 'Registro está em uso por outros registros',
           };
         case 'P2025':
           return {
             status: HttpStatus.NOT_FOUND,
-            message: 'Resource not found',
+            message: 'Registro não encontrado',
           };
       }
     }
 
     return {
       status: HttpStatus.INTERNAL_SERVER_ERROR,
-      message: 'Internal server error',
+      message: 'Erro interno do servidor',
     };
   }
 }

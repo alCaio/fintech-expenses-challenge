@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import { getErrorMessage } from '../api/errors'
 import { useAuth } from '../auth/useAuth'
@@ -7,14 +7,8 @@ import { AuthCard } from '../components/layout/AuthCard'
 import { FormField } from '../components/ui/FormField'
 import type { LoginInput } from '../types/domain'
 
-interface LocationState {
-  from?: string
-}
-
 export function LoginPage() {
   const { login } = useAuth()
-  const navigate = useNavigate()
-  const location = useLocation()
   const {
     register,
     handleSubmit,
@@ -24,8 +18,6 @@ export function LoginPage() {
   const onSubmit = async (input: LoginInput) => {
     try {
       await login(input)
-      const from = (location.state as LocationState | null)?.from ?? '/'
-      navigate(from, { replace: true })
     } catch (error) {
       toast.error(getErrorMessage(error))
     }

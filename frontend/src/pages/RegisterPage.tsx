@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import { getErrorMessage } from '../api/errors'
 import { useAuth } from '../auth/useAuth'
@@ -9,7 +9,6 @@ import type { RegisterInput } from '../types/domain'
 
 export function RegisterPage() {
   const { register: registerUser } = useAuth()
-  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -20,7 +19,6 @@ export function RegisterPage() {
     try {
       await registerUser(input)
       toast.success('Conta criada com sucesso')
-      navigate('/', { replace: true })
     } catch (error) {
       toast.error(getErrorMessage(error))
     }

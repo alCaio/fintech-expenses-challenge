@@ -73,12 +73,12 @@ describe('AuthService', () => {
       usersService.findByEmail.mockResolvedValueOnce(null);
       await expect(
         service.login({ email: 'nobody@example.com', password: 'secret123' }),
-      ).rejects.toThrow(new UnauthorizedException('Invalid email or password'));
+      ).rejects.toThrow(new UnauthorizedException('E-mail ou senha inválidos'));
 
       usersService.findByEmail.mockResolvedValueOnce(buildUser());
       await expect(
         service.login({ email: 'ana@example.com', password: 'wrong-pass1' }),
-      ).rejects.toThrow(new UnauthorizedException('Invalid email or password'));
+      ).rejects.toThrow(new UnauthorizedException('E-mail ou senha inválidos'));
 
       expect(jwtService.signAsync).not.toHaveBeenCalled();
     });

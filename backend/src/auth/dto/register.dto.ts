@@ -29,7 +29,7 @@ export class RegisterDto {
   @MinLength(8)
   @MaxLength(72)
   @Matches(/(?=.*[a-zA-Z])(?=.*\d)/, {
-    message: 'password must contain at least one letter and one number',
+    message: 'A senha deve conter ao menos uma letra e um número',
   })
   password!: string;
 }

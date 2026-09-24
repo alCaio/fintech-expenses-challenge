@@ -80,7 +80,7 @@ export class TransactionsService {
       include: includeCategory,
     });
     if (!transaction) {
-      throw new NotFoundException('Transaction not found');
+      throw new NotFoundException('Transação não encontrada');
     }
     return TransactionResponseDto.fromEntity(transaction);
   }
@@ -120,7 +120,7 @@ export class TransactionsService {
       where: { id, userId },
     });
     if (!transaction) {
-      throw new NotFoundException('Transaction not found');
+      throw new NotFoundException('Transação não encontrada');
     }
     return transaction;
   }

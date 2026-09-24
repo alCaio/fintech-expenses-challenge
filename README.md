@@ -2,8 +2,8 @@
 
 Plataforma interna para colaboradores registrarem e acompanharem movimentações financeiras por categoria (despesas operacionais, receitas de clientes, reembolsos etc.).
 
-- **Deploy:** https://SEU-SERVICO.onrender.com
-- **Documentação da API (Swagger):** https://SEU-SERVICO.onrender.com/api/docs
+- **Deploy:** https://SEU-PROJETO.vercel.app
+- **Documentação da API (Swagger):** https://SEU-PROJETO.vercel.app/api/docs
 - **Repositório:** https://github.com/alCaio/fintech-expenses-challenge
 
 ### Usuário de teste
@@ -11,8 +11,6 @@ Plataforma interna para colaboradores registrarem e acompanharem movimentações
 | E-mail | Senha |
 | --- | --- |
 | `demo@fintech.com` | `Demo@1234` |
-
-> No plano gratuito do Render o serviço hiberna após inatividade; a primeira requisição pode levar ~50s.
 
 ---
 
@@ -23,7 +21,7 @@ Plataforma interna para colaboradores registrarem e acompanharem movimentações
 | Backend | NestJS 11, TypeScript (strict), Prisma 6, PostgreSQL, JWT (`@nestjs/jwt` + Passport), class-validator |
 | Frontend | React 19, TypeScript (strict), Vite, React Router 7, TanStack React Query 5, Axios, react-hook-form |
 | Testes | Jest, jest-mock-extended, Supertest |
-| Infra | Render (web service + PostgreSQL), Docker Compose para o banco local |
+| Infra | Vercel (frontend estático + API como Serverless Function), Neon (PostgreSQL), Docker Compose para o banco local |
 
 ## Funcionalidades
 
@@ -60,9 +58,13 @@ Redux ou Zustand acrescentariam uma camada de código sem resolver nenhum proble
 - **Variáveis de ambiente** são validadas no boot. A aplicação não sobe com `.env` inválido.
 - **TypeScript** em `strict: true` completo, sem desligar nenhuma flag. O ESLint trata `no-explicit-any` como erro.
 
-### Deploy em um único serviço
+### Deploy em um único domínio
 
-Em produção, o NestJS serve o build do React (`@nestjs/serve-static`) e a API fica sob `/api`. Isso significa um link só, sem CORS em produção e um único serviço para manter. Em desenvolvimento, o Vite faz proxy de `/api` para o backend. O frontend também aceita `VITE_API_URL` caso seja publicado separadamente, por exemplo na Vercel, e o backend tem CORS configurável via `CORS_ORIGIN`.
+Frontend e API ficam no mesmo projeto da Vercel. O React é publicado como site estático, e todas as rotas `/api/*` são reescritas para uma Serverless Function (`api/index.js`). Essa função reaproveita o build do NestJS (`backend/src/serverless.ts`) e mantém a instância em cache entre invocações. O resultado é um link só e nenhum CORS em produção.
+
+- A função e o servidor tradicional (`main.ts`) montam a aplicação pela mesma factory (`app.factory.ts`), então os pipes, filtros, interceptors, CORS e Swagger são idênticos nos dois modos.
+- Em desenvolvimento, o Vite faz proxy de `/api` para o backend.
+- Para rodar fora da Vercel, o `main.ts` sobe um servidor HTTP comum. Se encontrar `frontend/dist`, ele também serve o React (`@nestjs/serve-static`). O frontend aceita `VITE_API_URL` e o backend aceita `CORS_ORIGIN`, caso os dois sejam publicados separados.
 
 ### O que ficou de fora de propósito
 
@@ -171,10 +173,11 @@ O que os testes cobrem:
 - **Dashboard:** somas com decimais sem erro de arredondamento; top 3 categorias; estado vazio.
 - **E2E**, contra PostgreSQL real: autenticação, validação, isolamento entre dois usuários, filtros, dashboard e regra de exclusão de categoria.
 
-## Deploy (Render)
+## Deploy (Vercel + Neon)
 
-O arquivo `render.yaml` define um PostgreSQL e um web service:
+A configuração está em `vercel.json` e `scripts/vercel-build.sh`.
 
-1. No Render, escolha **New → Blueprint** e selecione este repositório.
-2. O Render cria o banco, gera o `JWT_SECRET` automaticamente e faz o build do frontend e do backend.
-3. Ao iniciar, o serviço executa `prisma migrate deploy` e o seed, que é idempotente, e depois sobe a API servindo o frontend.
+1. Na Vercel, escolha **Add New → Project** e importe este repositório. Deixe o *Root Directory* na raiz; o `vercel.json` define os comandos de install e build.
+2. Em **Storage → Create Database → Neon (Postgres)**, conecte o banco ao projeto. Isso cria `DATABASE_URL` e `DATABASE_URL_UNPOOLED`.
+3. Em **Settings → Environment Variables**, adicione `JWT_SECRET` (uma string aleatória com 32 caracteres ou mais) e, se quiser, `JWT_EXPIRES_IN`.
+4. Faça o deploy. O build compila o backend e roda `prisma migrate deploy` e o seed, que é idempotente, pela conexão direta. Depois compila o frontend.

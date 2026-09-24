@@ -26,5 +26,6 @@ export default async function handler(
   server ??= bootstrap();
   const app = await server;
   req.url = stripRewriteParam(req.url);
+  Reflect.deleteProperty(req, 'query');
   app(req, res);
 }

@@ -35,13 +35,23 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     const body: ApiErrorResponse = {
       statusCode: status,
-      error: HttpStatus[status] ?? 'Error',
+      error: this.statusText(status),
       message,
       path: request.url,
       timestamp: new Date().toISOString(),
     };
 
     response.status(status).json(body);
+  }
+
+  private statusText(status: number): string {
+    const name: string | undefined = HttpStatus[status];
+    if (!name) return 'Error';
+    return name
+      .toLowerCase()
+      .split('_')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
   }
 
   private normalize(exception: unknown): NormalizedError {
